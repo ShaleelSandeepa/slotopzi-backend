@@ -361,7 +361,7 @@ public class AdminService {
                         .map(serviceEntry -> serviceEntry.getStaff().getFirstName()+" "+serviceEntry.getStaff().getLastName())
                         .findFirst().get();
             }catch (Exception e){
-                vehicleNumber=null;
+                    vehicleNumber=null;
                 technicianName=null;
             }
 //            try {

@@ -99,6 +99,8 @@ public class ServiceAdvisorService {
             VehicleListResponse vehicleListResponse =new VehicleListResponse();
             vehicleListResponse.setVehicleNumber(vehicle.getVehicleNumber());
             vehicleListResponse.setVin(vehicle.getVin());
+            vehicleListResponse.setMake(vehicle.getMake());
+            vehicleListResponse.setModel(vehicle.getModel());
             vehicleListResponses.add(vehicleListResponse);
         }
 
