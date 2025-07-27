@@ -56,4 +56,9 @@ public class Staff {
 //    @JsonIgnore
 //    private Set<Slot> slots;
 
+    @Override
+    public String toString() {
+        return "Staff{id=" + staffId + ", name=" + firstName + " " + lastName + "}";
+    }
+
 }

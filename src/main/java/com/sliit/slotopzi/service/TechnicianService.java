@@ -67,7 +67,10 @@ public class TechnicianService {
     }
     public String getSection(long userId){
         try {
-            return (sectionRepository.findByStaff(staffRepository.findByUserData_Id(userId)).getSectionName());
+            Staff staff = staffRepository.findByUserData_Id(userId);
+            Section section = sectionRepository.findByStaff(staff);
+            String sectionName = section.getSectionName();
+            return sectionName;
         }catch (Exception e){
             return null;
         }
