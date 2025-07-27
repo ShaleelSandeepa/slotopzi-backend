@@ -326,6 +326,18 @@ public class ServiceAdvisorService {
             //in real time if any other repair searched
             assignedSlot.setStatus(SlotStatus.ONPROCESS);
             slotRepository.save(assignedSlot);
+
+            System.out.println("\n\nAssigned Slot : " + assignedSlot.getSlotName()+"\n");
+
+            //accept the slot for the repair when auto assigned
+//            Date date=new Date();
+//            for (ServiceEntry serviceEntry:entryList){
+//                serviceEntry.setServiceEntryStatus(ServiceEntryStatus.ONGOING);
+//                serviceEntry.setAssignedTime(date);
+//                serviceEntryRepository.save(serviceEntry);
+//                System.out.println("\n\nService Entry ID: " + serviceEntry.getEntryId() + " Status: " + serviceEntry.getServiceEntryStatus() + " Assigned Time: " + serviceEntry.getAssignedTime()+"\n");
+//            }
+
             return getSlot(repairId, assignedSlot);
         }
         //if available slots not there

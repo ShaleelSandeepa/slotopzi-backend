@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TechnicianService {
@@ -243,6 +244,7 @@ public class TechnicianService {
             serviceEntry.setServiceEntryStatus(ServiceEntryStatus.ONGOING);
             serviceEntry.setAssignedTime(date);
             serviceEntryRepository.save(serviceEntry);
+            System.out.println("\n\nService Entry ID: " + serviceEntry.getEntryId() + " Status: " + serviceEntry.getServiceEntryStatus() + " Assigned Time: " + serviceEntry.getAssignedTime()+"\n");
         }
         slot.setStatus(SlotStatus.ONPROCESS);
         slotRepository.save(slot);
@@ -255,6 +257,8 @@ public class TechnicianService {
             availableSlot=null;
         }else{ availableSlot = availableList.stream().findFirst().get();}
 
+        System.out.println("\n\nAvailable Slot: " + (availableSlot != null ? availableSlot.getSlotName() : "No Available Slots"));
+
         List<GetUpcomingRepairResponse> getUpcomingRepairResponses = new ArrayList<>();
 
         //get pending repairs on section
@@ -263,12 +267,28 @@ public class TechnicianService {
                 .map(serviceEntry -> serviceEntry.getRepair().getRepairId())
                 .distinct()
                 .collect(Collectors.toList());
-        //check if slot has ongoing repairs
+        System.out.println("Repair ID List 1: " + repairIdList);
 
-        if(repairIdList.isEmpty()){
+        List<Long> repairIdList2 = serviceEntryRepository.findAllBySlot_Section_SectionNameAndServiceEntryStatusIs(sectionName, ServiceEntryStatus.ADDED)
+                .stream()
+                .map(serviceEntry -> serviceEntry.getRepair().getRepairId())
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println("Repair ID List 2: " + repairIdList2);
+
+        List<Long> combinedRepairIdList = Stream.concat(
+                        repairIdList.stream(),
+                        repairIdList2.stream()
+                )
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println("Combined Repair ID List: " + combinedRepairIdList);
+
+        //check if slot has ongoing repairs
+        if(combinedRepairIdList.isEmpty()){
             return null;
         }else {
-            for (long repairId:repairIdList){
+            for (long repairId:combinedRepairIdList){
                 GetUpcomingRepairResponse getUpcomingRepairResponse=new GetUpcomingRepairResponse();
                 Repair repair=repairRepository.findByRepairId(repairId);
                 List<ServiceEntry> entriesByIdAndSection = serviceEntryRepository.findAllByRepair_RepairIdAndSubCategory_Section_SectionName(repairId, sectionName);
